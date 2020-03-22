@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.cfg.AvailableSettings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,10 @@ import static java.lang.String.format;
 @ConditionalOnProperty(name = "embedded.postgres.test", havingValue = "true", matchIfMissing = false)
 public class DbConfig
 {
+    @Value("${embedded.postgres.models}")
+    private String modelsPackage;
+    @Value("${embedded.postgres.repositories}")
+    private String repositoriesPackage;
     private static final List<String> DEFAULT_ADDITIONAL_INIT_DB_PARAMS = Arrays
         .asList("--nosync", "--locale=en_US.UTF-8");
 
@@ -54,7 +59,7 @@ public class DbConfig
         LocalContainerEntityManagerFactoryBean lcemfb
             = new LocalContainerEntityManagerFactoryBean();
         lcemfb.setDataSource(dataSource);
-        lcemfb.setPackagesToScan("io.romeh.postgresembeddeddaotesting.domain", "io.romeh.postgresembeddeddaotesting.dao");
+        lcemfb.setPackagesToScan(modelsPackage, repositoriesPackage);
         HibernateJpaVendorAdapter va = new HibernateJpaVendorAdapter();
         lcemfb.setJpaVendorAdapter(va);
         lcemfb.setJpaProperties(getHibernateProperties());
@@ -103,7 +108,7 @@ public class DbConfig
     {
 
         final PostgresConfig postgresConfig = new PostgresConfig(
-            Version.V9_6_8,
+            Version.V11_1,
             new AbstractPostgresConfig.Net("localhost", Network.getFreeServerPort()),
             new AbstractPostgresConfig.Storage("test"),
             new AbstractPostgresConfig.Timeout(),
