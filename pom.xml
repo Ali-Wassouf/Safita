@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.3.3</postgresql.version>
         <liquibase.sql.changelogfile>src/main/resources/liquibase/changelog.xml</liquibase.sql.changelogfile>
         <liquibase.sql.driver>org.postgresql.Driver</liquibase.sql.driver>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
